@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ACT admin documentation</title>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            margin: auto; /* Center horizontally */
+            max-width: 700px; /* Set maximum width */
+            width: 90%; /* Optional: Allow some flexibility on smaller screens */
+            flex: 1; /* Allows the main content to expand to fill available space */
+        }
+        table {
+            border-collapse: collapse; /* Collapse borders for single-line effect */
+            border: 1px solid #ccc; /* Add a border to the table itself */
+        }
+
+        th, td {
+            border: 1px solid #ccc; /* Add borders to table cells (th and td) */
+            padding: 8px; /* Add some padding within cells */
+            text-align: left; /* Default text alignment to the left */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>ACT Admin</h1>
+    <p>ACT admin is a plugin which provides facilities to edit various tables used by the ACT website:</p>
+    <ul>
+        <li>recipients - table to drive the list of recipients in the contact us form admin
+            to determine the recipient of the new signups email for a group.
+        </li>
+        <li>
+            wwareas - basic information for the map about wildlife warden areas, used to populate information on the map. 
+        </li>
+        <li>
+            ccareas - placeholder for input of information about carbon cutters for a proposed map.
+        </li>
+    </ul>
+    <p>This plugin adds a item ACT admin to the dashboard if the user has an appropriate role to
+        manage at least one of these lists.
+    </p>
+    <p>The ACT admin menu has an item for each list the user can administer</p>
+    <h2>Roles</h2>
+    <p>The following table shows the roles that are associated with each list</p>
+    <table>
+        <tr><th>List id</th><th>Role</th></tr>
+        <tr><td>recipients</td><td>administrator</td></tr>
+        <tr><td>wwareas</td><td>administrator</td></tr>
+        <tr><td>ccareas</td><td>cc_admin</td></tr>
+    </table>
+    <p>ww_admin and cc_admin are custom roles which should be defined via a suitable third-party plugin</p>
+    <h2>Recipients list</h2>
+    <p>Recipients list is a simple csv file which is stored outside publicly accessible storage.
+        It has only 2 columns - name and email
+    </p>
+    <h3>Recipients - name</h3>
+    <p>This is the name that appears in the 'Choose topic' list in the contact us form on the website.
+        These names should align with the interests people sign up for on the mailchimp 
+        form under join.
+    </p>
+    <h3>Recipients - email</h3>
+    <p>This is the email address(es) of one or more persons to receive the message.
+        If more than one email address is specified, then these must be separated by a semi-colon (;)
+    </p>
+    <p>When you select the Recipients List menu item, the list is displayed so that you 
+        can edit it. When you have finished editing press Submit|
+    </p>
+    <h2>Wildlife Warden Areas</h2>
+    <p>This list is driven by a predefined list of areas. 
+        To change details of an area:</p>
+    <ol>
+        <li>Select the area from the list</li>
+        <li>The details of the area are shown with only the fields you can change editable</li>
+        <li>Make your changes</li>
+        <li>Press the submit button to write your changes back to the server.</li>
+    </ol>
+    <h3>No. Wardens</h3>
+    <p>This field should be set to the number of wardens</p>
+    <h3>Parish Text</h3>
+    <p>This should be short descriptive text, typically provided by wardens for an area.</p>
+    <h2>Where do area boundaries come from?</h2>
+    <p>Wildlife Warden Areas have been assigned based on a combination of parish boundaries and Newton Abbot ward boundaries.
+        A boundary map has been derived from data in 
+        <a href="https://www.ordnancesurvey.co.uk/products/boundary-line" target="boundaryline" >OS Boundary Line</a>. 
+    </p>
+    <p>The codes that you will are standard ONS codes, which are used to join the boundaries with other datasets.</p>
+    <h1>Configuration</h1>
+    <h2>Location of the lists</h2>
+    <p>For security reasons lists are stored outside the wordpress root (public_html), 
+        this means that ACT_admin needs to know where the lists are stored. This setting is stored in wp-config.php in the wordpress root,
+    the following line should be added to wp-config.php:</p>
+    <pre><code>
+        /* Path of lists maintained by ACT_admin */
+        define( 'LISTS_DIR', '/home/customer/www/actionclimateteignbridge.org/jobs/');
+    </code></pre>
+    <p>It is suggested that this is added after ABSPATH is defined.</p>
+    <h2>Updating WildlifeWardenAreas map</h2>
+    <p>This requires:</p>
+    <ol>
+        <li>That ACT_update_ww_map.php should be put in the directory specified by LISTS_DIR</li>
+        <li>The WildlifeWardenArea.json should be in LISTS_DIR/../public_html/mapping/WW ,
+            if the default paths are assumed, this would be /home/customer/www/actionclimateteignbridge.org/public_html/mapping/WW
+        </li>
+        <li>The group of WildlifeWardenArea.json should be set to www-data (assuming this is the web user), e.g. at the command line
+            <pre><code>
+                cd ~/www/actionclimateteignbridge.org/public_html/mapping/WW
+                chgrp www-data WildlifeWardenArea.json
+            </code></pre>
+            If the group is not changed, then ACT_update_ww_map.php will be unable to update this file.
+        </li>
+        <li>
+            If there is still a separate WW domain containing the map, then WildlifeWardenAreas.json should be linked to the above file.
+            e.g. at the command line:
+            <pre><code>
+                cd ~/www/ww.actionclimateteignbridge.org/public_html/mapping/WW
+                ln -s ~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenAreas.json ./
+            </code></pre>
+            This means that these are effectively the same file, so that updates applied to the copy in the main directly will also appear at the
+            same time in the WW domain.
+        </li>
+    </ol>
+    <p>NOTE: the steps described above require SSH terminal access to the actionclimateteignbridge.org siteground account.</p>
+    <h1>TODO</h1>
+    <ul>
+        <li>Ability for an administrator to specify the maintainer/maintainer of a list, who is not an administrator</li>
+    </ul>
+    <h1>Troubleshooting</h1>
+    <table>
+        <tr>
+            <table>
+                <tr><th>Problem:</th><td>Developer console failed to load tooltips.js, namevalue.js, tableeditor.js</td></tr>
+                <tr><th>Solution:</th>
+                    <td>If the ACT_admin folder has been copied with FileZilla, these files are linked to another folder
+                        on sites.stringerhj.co.uk, these files need to be copied individually.
+                </td></tr>
+            </table>
+        </tr>
+        <tr>
+            <table>
+                <tr><th>Problem:</th><td>Write failure in wwareas failed to update map error reported.</td></tr>
+                <tr><th>Solution:</th><td>~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json doesn't have write permissions</td></tr>
+            </table>
+        </tr>
+        <tr>
+            <table>
+                <tr><th>Problem:</th><td>Live WW Map not updated</td></tr>
+                <tr><th>Solution:</th><td>~/www/ww.actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json is not
+                    linked to ~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json
+                </td></tr>
+            </table>
+        </tr>
+        <tr>
+            <table>
+                <tr><th>Problem:</th><td></td></tr>
+                <tr><th>Solution:</th><td></td></tr>
+            </table>
+        </tr>
+    </table>
+</body>
+</html>
