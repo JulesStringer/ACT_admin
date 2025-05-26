@@ -1,1 +1,1 @@
-/var/share/bigdisk/websites/library/tableeditor.js
+/var/www/stringerhj.co.uk/library/tableeditor.js

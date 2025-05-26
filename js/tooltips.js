@@ -1,1 +1,1 @@
-/var/share/bigdisk/websites/library/tooltips.js
+/var/www/stringerhj.co.uk/library/tooltips.js

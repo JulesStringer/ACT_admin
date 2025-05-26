@@ -15,7 +15,7 @@ function get_act_admin_lists() {
         ),
         'wwareas' => array(
             'title' => 'WW Areas',
-            'role' => 'managesingle json_options', // Custom role
+            'role' => 'manage_options', // Custom role
             'list' => LISTS_DIR . 'wwareas.json',
             'list_format' => 'json',
             'follow_on_script' => LISTS_DIR . 'ACT_update_ww_map.php'
