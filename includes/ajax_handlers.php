@@ -213,4 +213,27 @@ add_action( 'wp_ajax_get_act_admin_list_data', 'get_act_admin_list_data' );
 add_action( 'wp_ajax_save_act_admin_list_data', 'save_act_admin_list_data' );
 //add_action( 'wp_ajax_nopriv_save_act_admin_list_data', 'save_act_admin_list_data' ); // If needed
 
+function wpcf7_form_callback($tag, $args){
+    error_log(sprintf("In wpcf7_form_callback tag %s args %s", var_export($tag, true), var_export($args, true)));
+    if ( 'select' === $tag['basetype'] && 'recipients' === $tag['name'] ) { // Adjust 'recipient-email' to your field name
+        $file_path = LISTS_DIR . 'recipients.csv';
+        $values = array();
+        $labels = array();
+        if (($handle = fopen($file_path, "r")) !== FALSE) {
+            $c = 0;
+            while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if ( $c > 0 ){
+                    $values[] = $row[1];
+                    $labels[] = $row[0];
+                }
+                $c++;
+            }
+            fclose($handle);
+        }
+        $tag['labels'] = array_merge($tag['labels'], $labels);
+        $tag['values'] = array_merge($tag['values'], $values);
+    }
+    return $tag;
+}
+add_filter( 'wpcf7_form_tag', 'wpcf7_form_callback', 10, 2 );
 ?>
