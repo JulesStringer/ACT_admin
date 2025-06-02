@@ -214,7 +214,7 @@ add_action( 'wp_ajax_save_act_admin_list_data', 'save_act_admin_list_data' );
 //add_action( 'wp_ajax_nopriv_save_act_admin_list_data', 'save_act_admin_list_data' ); // If needed
 
 function wpcf7_form_callback($tag, $args){
-    error_log(sprintf("In wpcf7_form_callback tag %s args %s", var_export($tag, true), var_export($args, true)));
+    //error_log(sprintf("In wpcf7_form_callback tag %s args %s", var_export($tag, true), var_export($args, true)));
     if ( 'select' === $tag['basetype'] && 'recipients' === $tag['name'] ) { // Adjust 'recipient-email' to your field name
         $file_path = LISTS_DIR . 'recipients.csv';
         $values = array();
@@ -223,7 +223,7 @@ function wpcf7_form_callback($tag, $args){
             $c = 0;
             while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if ( $c > 0 ){
-                    $values[] = $row[1];
+                    $values[] = str_replace(';',',',$row[1]);
                     $labels[] = $row[0];
                 }
                 $c++;
@@ -232,8 +232,24 @@ function wpcf7_form_callback($tag, $args){
         }
         $tag['labels'] = array_merge($tag['labels'], $labels);
         $tag['values'] = array_merge($tag['values'], $values);
+        error_log(sprintf("recipients tag returned as %s", var_export($tag, true)));
     }
     return $tag;
 }
 add_filter( 'wpcf7_form_tag', 'wpcf7_form_callback', 10, 2 );
+
+function wpcf7_split_recipients_for_mail( $replaced, $mail_tag, $html, $mail_tag_name ) {
+    if ( 'recipients' === $mail_tag->name ) {
+        // Check if the value contains a comma (indicating multiple emails)
+        if ( strpos( $replaced, ',' ) !== false ) {
+            // Split the comma-separated string into an array of email addresses
+            $emails = array_map( 'trim', explode( ',', $replaced ) );
+            // Return the array of email addresses, which Contact Form 7 will handle correctly
+            error_log(sprintf("translated %s to %s",$replaced, print_r($emails, true)));
+            return $emails;
+        }
+    }
+    return $replaced;
+}
+add_filter( 'wpcf7_mail_tag_replaced', 'wpcf7_split_recipients_for_mail', 10, 4 );
 ?>
