@@ -4,7 +4,7 @@ Plugin Name: ACT Admin
 Plugin URI:  https://sites.stringerhj.co.uk/ACT/WP_plugins/ACT_admin/html/ACT_admin.html
 // (Optional: URL to your plugin's website)
 Description: ACT admin provides facilities for 
-Version: 1.0.0 // Your plugin's version
+Version: 1.1.0 // Your plugin's version
 Author: Julian Stringer
 Author URI: // (Optional: URL to your website)
 // ... other plugin details
