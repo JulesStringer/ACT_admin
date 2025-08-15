@@ -102,7 +102,7 @@ NOTE: the steps described above require SSH terminal access to the actionclimate
 
 |Problem:|Write failure in wwareas failed to update map error reported.|
 |-------|---------------------------------------------------------------|
-|Solution:~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json doesn't have write permissions|
+|Solution:|~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json doesn't have write permissions|
 
 |Problem:|Live WW Map not updated|
 |-------|---------------------------------------------------------------|
