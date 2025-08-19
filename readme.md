@@ -95,10 +95,10 @@ NOTE: the steps described above require SSH terminal access to the actionclimate
 
 # TODO
 + Ability for an administrator to specify the maintainer/maintainer of a list, who is not an administrator
-# Troubleshooting</h1>
+# Troubleshooting
 |Problem:|Developer console failed to load tooltips.js, namevalue.js, tableeditor.js|
 |-------|---------------------------------------------------------------|
-|Solution:|If the ACT_admin folder has been copied with FileZilla, these files are linked to another folder on sites.stringerhj.co.uk, these files need to be copied individually.|
+|Solution:|If the ACT_admin folder has been copied with FileZilla, these files are linked to another folder on sites.stringerhj.co.uk, these files need to be copied individually. This needs a better solution, because the link references get checked into git and github, these should be in some kind of common library which has its own repository and versioned delivery mechanism|
 
 |Problem:|Write failure in wwareas failed to update map error reported.|
 |-------|---------------------------------------------------------------|
