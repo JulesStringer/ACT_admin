@@ -92,7 +92,8 @@ If the group is not changed, then ACT_update_ww_map.php will be unable to update
 This means that these are effectively the same file, so that updates applied to the copy in the main directly will also appear at the same time in the WW domain.
 This step is no longer necessary now that ww. is part of the main domain.
 NOTE: the steps described above require SSH terminal access to the actionclimateteignbridge.org siteground account.
-
+# Fixed in this version
++ This plugin was causing 404 not found errors in the admin pages of other plugs, this leak has been fixed.
 # TODO
 + Ability for an administrator to specify the maintainer/maintainer of a list, who is not an administrator
 # Troubleshooting

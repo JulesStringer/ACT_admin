@@ -30,10 +30,12 @@ function act_admin_enqueue_scripts_and_styles() {
     );
     if ( isset($_GET['page'])){
         $page = $_GET['page'];
-        $listid = str_replace('act-admin-','',$page);
-        if ( $listid != 'admin'){
-            wp_enqueue_script( 'act-admin-dynamic', plugins_url( 'js/' . $listid . '_admin.js', __FILE__ ), array('jquery','act-admin-list-manager',
-                    'act-admin-common','act-admin-tableeditor','act-admin-namevalueeditor'), '1.0', true );
+        if ( strpos($page, 'act-admin-') === 0 ) {
+            $listid = substr($page, strlen('act-admin-'));
+            if ( $listid != 'admin'){
+                wp_enqueue_script( 'act-admin-dynamic', plugins_url( 'js/' . $listid . '_admin.js', __FILE__ ), array('jquery','act-admin-list-manager',
+                        'act-admin-common','act-admin-tableeditor','act-admin-namevalueeditor'), '1.0', true );
+            }
         }
     }
 }
@@ -72,8 +74,10 @@ function act_admin_page() {
 function act_admin_list_page() {
     $current_screen = get_current_screen();
     $screen_id = $current_screen->id;
+    if ( strpos($screen_id,'act-admin_page_act-admin-' ) !== 0){
+        return;
+    } 
     $list_id = str_replace('act-admin_page_act-admin-', '', $screen_id);
-
     $list_data = get_act_admin_list_by_id($list_id);
     if (!$list_data) {
         echo '<h2>Screen id{'. $screen_id, '}</h2>';
