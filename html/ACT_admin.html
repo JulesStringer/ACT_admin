@@ -30,12 +30,6 @@
         <li>recipients - table to drive the list of recipients in the contact us form admin
             to determine the recipient of the new signups email for a group.
         </li>
-        <li>
-            wwareas - basic information for the map about wildlife warden areas, used to populate information on the map. 
-        </li>
-        <li>
-            ccareas - placeholder for input of information about carbon cutters for a proposed map.
-        </li>
     </ul>
     <p>This plugin adds a item ACT admin to the dashboard if the user has an appropriate role to
         manage at least one of these lists.
@@ -46,8 +40,6 @@
     <table>
         <tr><th>List id</th><th>Role</th></tr>
         <tr><td>recipients</td><td>administrator</td></tr>
-        <tr><td>wwareas</td><td>administrator</td></tr>
-        <tr><td>ccareas</td><td>cc_admin</td></tr>
     </table>
     <p>ww_admin and cc_admin are custom roles which should be defined via a suitable third-party plugin</p>
     <h2>Recipients list</h2>
@@ -77,25 +69,6 @@
         </pre>
         Here recipients is both the name by which the list is known and the field name for reference on the mail tab of Contact Form 7.
     </p>
-    <h2>Wildlife Warden Areas</h2>
-    <p>This list is driven by a predefined list of areas. 
-        To change details of an area:</p>
-    <ol>
-        <li>Select the area from the list</li>
-        <li>The details of the area are shown with only the fields you can change editable</li>
-        <li>Make your changes</li>
-        <li>Press the submit button to write your changes back to the server.</li>
-    </ol>
-    <h3>No. Wardens</h3>
-    <p>This field should be set to the number of wardens</p>
-    <h3>Parish Text</h3>
-    <p>This should be short descriptive text, typically provided by wardens for an area.</p>
-    <h2>Where do area boundaries come from?</h2>
-    <p>Wildlife Warden Areas have been assigned based on a combination of parish boundaries and Newton Abbot ward boundaries.
-        A boundary map has been derived from data in 
-        <a href="https://www.ordnancesurvey.co.uk/products/boundary-line" target="boundaryline" >OS Boundary Line</a>. 
-    </p>
-    <p>The codes that you will are standard ONS codes, which are used to join the boundaries with other datasets.</p>
     <h1>Configuration</h1>
     <h2>Location of the lists</h2>
     <p>For security reasons lists are stored outside the wordpress root (public_html), 

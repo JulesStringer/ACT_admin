@@ -16,10 +16,6 @@ The following table shows the wordpress roles that are associated with each list
 |List id|Role|
 |-------|----|
 |recipients|administrator|
-|wwareas|administrator|
-|ccareas|cc_admin|
-
-cc_admin is a custom roles which should be defined via a suitable third-party plugin
 
 ## Recipients list
 Recipients list is a simple csv file which is stored outside publicly accessible storage.
@@ -44,22 +40,8 @@ to do this enter a select of select* tag as follows on your form:
 Here recipients is both the name by which the list is known and the field name for reference on the mail tab of Contact Form 7.
 
 ## Wildlife Warden Areas
-This list is driven by a predefined list of areas. To change details of an area:
-1. Select the area from the list
-2. The details of the area are shown with only the fields you can change editable
-3. Make your changes
-4. Press the submit button to write your changes back to the server.
+This functionality is now handled by ACT_maps.
 
-### No. Wardens
-This field should be set to the number of wardens
-### Parish Text
-This should be short descriptive text, typically provided by wardens for an area.
-
-## Where do area boundaries come from?
-Wildlife Warden Areas have been assigned based on a combination of parish boundaries and Newton Abbot ward boundaries.
-A boundary map has been derived from data in 
-[OS Boundary Line](https://www.ordnancesurvey.co.uk/products/boundary-line)
-The codes that you will see are standard ONS codes, which are used to join the boundaries with other datasets.
 # Configuration
 
 ## Location of the lists
@@ -72,41 +54,14 @@ the following line should be added to wp-config.php:
 ```
 It is suggested that this is added after ABSPATH is defined.
 
-## Updating WildlifeWardenAreas map
-This requires:
-1. That ACT_update_ww_map.php should be put in the directory specified by LISTS_DIR
-2. The WildlifeWardenArea.json should be in LISTS_DIR/../public_html/mapping/WW ,
-3. if the default paths are assumed, this would be /home/customer/www/actionclimateteignbridge.org/public_html/mapping/WW
-4. The group of WildlifeWardenArea.json should be set to www-data (assuming this is the web user), e.g. at the command line
-```bash
-    cd ~/www/actionclimateteignbridge.org/public_html/mapping/WW
-    chgrp www-data WildlifeWardenArea.json
-```
-If the group is not changed, then ACT_update_ww_map.php will be unable to update this file.
-5. If there is still a separate WW domain containing the map, then WildlifeWardenAreas.json should be linked to the above file.
-    e.g. at the command line:
-```bash
-    cd ~/www/ww.actionclimateteignbridge.org/public_html/mapping/WW
-    ln -s ~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenAreas.json ./
-```
-This means that these are effectively the same file, so that updates applied to the copy in the main directly will also appear at the same time in the WW domain.
-This step is no longer necessary now that ww. is part of the main domain.
-NOTE: the steps described above require SSH terminal access to the actionclimateteignbridge.org siteground account.
 # Fixed in this version
 + This plugin was causing 404 not found errors in the admin pages of other plugs, this leak has been fixed.
 # TODO
 + Ability for an administrator to specify the maintainer/maintainer of a list, who is not an administrator
++ Add table_editor folder clone in the same manner ACT_maps
 # Troubleshooting
 |Problem:|Developer console failed to load tooltips.js, namevalue.js, tableeditor.js|
 |-------|---------------------------------------------------------------|
 |Solution:|If the ACT_admin folder has been copied with FileZilla, these files are linked to another folder on sites.stringerhj.co.uk, these files need to be copied individually. This needs a better solution, because the link references get checked into git and github, these should be in some kind of common library which has its own repository and versioned delivery mechanism|
 
-|Problem:|Write failure in wwareas failed to update map error reported.|
-|-------|---------------------------------------------------------------|
-|Solution:|~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json doesn't have write permissions|
-
-|Problem:|Live WW Map not updated|
-|-------|---------------------------------------------------------------|
-|Solution:|/www/ww.actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json is not
-                    linked to ~/www/actionclimateteignbridge.org/public_html/mapping/WW/WildlifeWardenArea.json|
 
