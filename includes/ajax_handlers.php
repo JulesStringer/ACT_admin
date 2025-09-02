@@ -1,7 +1,10 @@
 <?php
 require_once(ABSPATH . 'wp-admin/includes/file.php'); // For file uploads if needed.
 if ( ! defined( 'LISTS_DIR' ) ){
-    define( 'LISTS_DIR', '/home/customer/www/actionclimateteignbridge.org');
+    define( 'LISTS_DIR', '/home/customer/www/actionclimateteignbridge.org/jobs/');
+}
+if ( !defined( 'MAPDATA')) {
+    define( 'MAPDATA', '/home/customer/www/actionclimateteignbridge.org/mapdata/');
 }
 function get_act_admin_lists() {
     /* Path of lists maintained by ACT_admin */
@@ -13,6 +16,7 @@ function get_act_admin_lists() {
             'list' => LISTS_DIR . 'recipients.csv',
             'list_format' => 'csv'
         ),
+/*
         'wwareas' => array(
             'title' => 'WW Areas',
             'role' => 'manage_options', // Custom role
@@ -22,10 +26,12 @@ function get_act_admin_lists() {
         ),
         'ccareas' => array(
             'title' => 'CC Areas',
-            'role' => 'cc_admin', // Custom role
+            'role' => 'manage_options', // Custom role
             'list' => LISTS_DIR . 'ccareas.json',
-            'list_format' => 'json'
+            'list_format' => 'json',
+            'follow_on_script' => LIST_DIR . 'ACT_update_cc_map.php'
         )
+*/
     );
     $user = wp_get_current_user(); // Get the current user
 
