@@ -3,9 +3,6 @@ require_once(ABSPATH . 'wp-admin/includes/file.php'); // For file uploads if nee
 if ( ! defined( 'LISTS_DIR' ) ){
     define( 'LISTS_DIR', '/home/customer/www/actionclimateteignbridge.org/jobs/');
 }
-if ( !defined( 'MAPDATA')) {
-    define( 'MAPDATA', '/home/customer/www/actionclimateteignbridge.org/mapdata/');
-}
 function get_act_admin_lists() {
     /* Path of lists maintained by ACT_admin */
 // TODO when plugin is registered add specific roles for each list and add role to maintainer of list.
@@ -16,22 +13,6 @@ function get_act_admin_lists() {
             'list' => LISTS_DIR . 'recipients.csv',
             'list_format' => 'csv'
         ),
-/*
-        'wwareas' => array(
-            'title' => 'WW Areas',
-            'role' => 'manage_options', // Custom role
-            'list' => LISTS_DIR . 'wwareas.json',
-            'list_format' => 'json',
-            'follow_on_script' => LISTS_DIR . 'ACT_update_ww_map.php'
-        ),
-        'ccareas' => array(
-            'title' => 'CC Areas',
-            'role' => 'manage_options', // Custom role
-            'list' => LISTS_DIR . 'ccareas.json',
-            'list_format' => 'json',
-            'follow_on_script' => LIST_DIR . 'ACT_update_cc_map.php'
-        )
-*/
     );
     $user = wp_get_current_user(); // Get the current user
 
@@ -218,27 +199,58 @@ add_action( 'wp_ajax_get_act_admin_list_data', 'get_act_admin_list_data' );
 
 add_action( 'wp_ajax_save_act_admin_list_data', 'save_act_admin_list_data' );
 //add_action( 'wp_ajax_nopriv_save_act_admin_list_data', 'save_act_admin_list_data' ); // If needed
-
 function wpcf7_form_callback($tag, $args){
-    //error_log(sprintf("In wpcf7_form_callback tag %s args %s", var_export($tag, true), var_export($args, true)));
-    if ( 'select' === $tag['basetype'] && 'recipients' === $tag['name'] ) { // Adjust 'recipient-email' to your field name
+    if ( 'select' === $tag['basetype'] && 'recipients' === $tag['name'] ) {
         $file_path = LISTS_DIR . 'recipients.csv';
         $values = array();
         $labels = array();
+        $default_value = '';
+        
+        // Read the CSV file and store data
         if (($handle = fopen($file_path, "r")) !== FALSE) {
             $c = 0;
             while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if ( $c > 0 ){
-                    $values[] = str_replace(';',',',$row[1]);
                     $labels[] = $row[0];
+                    $values[] = str_replace(';',',',$row[1]);
                 }
                 $c++;
             }
             fclose($handle);
         }
+        
+        // Populate the tag with all labels and values
         $tag['labels'] = array_merge($tag['labels'], $labels);
         $tag['values'] = array_merge($tag['values'], $values);
-        error_log(sprintf("recipients tag returned as %s", var_export($tag, true)));
+        
+        // Check for URL parameter and find the corresponding email
+        if (isset($_GET['recipients'])) {
+            $url_param_name = sanitize_text_field($_GET['recipients']);
+            // Loop through the labels to find a match
+            foreach ($labels as $index => $label) {
+                if ($label === $url_param_name) {
+                    $default_value = $values[$index];
+                    break; // Exit the loop once a match is found
+                }
+            }
+            
+            // If a default value was found, add it to the tag options
+            if (!empty($default_value)) {
+                //$tag['options'][] = 'default:' . $default_value;
+                $tag['labels'] = array($url_param_name);
+                $tag['values'] = array($default_value);
+                foreach($labels as $l){
+                    if ( $l != $url_param_name){
+                        $tag['labels'] [] = $l;
+                    }
+                } 
+                foreach($values as $v){
+                    if ( $v != $default_value){
+                        $tag['values'] [] = $v;
+                    }
+                }
+            }
+        }
     }
     return $tag;
 }
